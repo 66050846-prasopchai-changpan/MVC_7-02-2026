@@ -1,0 +1,66 @@
+<%- include("../partials/head") %>
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container">
+    <a class="navbar-brand brand-accent" href="/">KMITL NEW</a>
+    <div class="navbar-nav">
+      <a class="nav-link active" href="/user/rumours">ผู้ใช้ทั่วไป</a>
+      <a class="nav-link" href="/reviewer">ผู้ตรวจสอบ</a>
+      <a class="nav-link" href="/summary">สรุปผล</a>
+    </div>
+    <div class="navbar-nav ms-auto">
+      <% if (currentUser) { %>
+        <span class="navbar-text me-3">
+          <%= currentUser.name %> (<%= currentUser.role === 'reviewer' ? 'ผู้ตรวจสอบ' : 'ผู้ใช้ทั่วไป' %>)
+        </span>
+        <form method="post" action="/logout" class="d-inline">
+          <button class="btn btn-sm btn-outline-secondary" type="submit">ออกจากระบบ</button>
+        </form>
+      <% } else { %>
+        <a class="nav-link" href="/login">เข้าสู่ระบบ</a>
+      <% } %>
+    </div>
+  </div>
+</nav>
+
+<main class="container py-4">
+  <h1 class="mb-3">หน้ารวมข่าวลือ</h1>
+  <p class="text-muted">เรียงตามจำนวนรายงาน (มาก → น้อย)</p>
+
+  <div class="table-responsive">
+    <table class="table table-striped align-middle">
+      <thead>
+        <tr>
+          <th>รหัสข่าวลือ</th>
+          <th>หัวข้อ</th>
+          <th>แหล่งที่มา</th>
+          <th>คะแนนความน่าเชื่อถือ</th>
+          <th>จำนวนรายงาน</th>
+          <th>สถานะ</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% rumours.forEach(r => { %>
+          <tr>
+            <td><%= r.id %></td>
+            <td><%= r.title %></td>
+            <td><%= r.source %></td>
+            <td><%= r.credibility_score %></td>
+            <td><%= r.report_count || 0 %></td>
+            <td>
+              <span class="badge <%= r.status === 'panic' ? 'bg-danger' : 'bg-secondary' %>">
+                <%= r.status %>
+              </span>
+            </td>
+            <td>
+              <a class="btn btn-sm btn-outline-primary" href="/user/rumours/<%= r.id %>">ดูรายละเอียด</a>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</main>
+
+<%- include("../partials/foot") %>

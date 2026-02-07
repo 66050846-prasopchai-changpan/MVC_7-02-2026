@@ -1,0 +1,94 @@
+<%- include("../partials/head") %>
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container">
+    <a class="navbar-brand brand-accent" href="/">KMITL NEW</a>
+    <div class="navbar-nav">
+      <a class="nav-link" href="/user/rumours">ผู้ใช้ทั่วไป</a>
+      <a class="nav-link active" href="/reviewer">ผู้ตรวจสอบ</a>
+      <a class="nav-link" href="/summary">สรุปผล</a>
+    </div>
+    <div class="navbar-nav ms-auto">
+      <% if (currentUser) { %>
+        <span class="navbar-text me-3">
+          <%= currentUser.name %> (<%= currentUser.role === 'reviewer' ? 'ผู้ตรวจสอบ' : 'ผู้ใช้ทั่วไป' %>)
+        </span>
+        <form method="post" action="/logout" class="d-inline">
+          <button class="btn btn-sm btn-outline-secondary" type="submit">ออกจากระบบ</button>
+        </form>
+      <% } else { %>
+        <a class="nav-link" href="/login">เข้าสู่ระบบ</a>
+      <% } %>
+    </div>
+  </div>
+</nav>
+
+<main class="container py-4">
+  <h1 class="mb-3">ตรวจสอบข่าวลือ</h1>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title"><%= rumour.title %></h5>
+      <p class="card-text">รหัสข่าวลือ: <strong><%= rumour.id %></strong></p>
+      <p class="card-text">แหล่งที่มา: <%= rumour.source %></p>
+      <p class="card-text">วันที่สร้าง: <%= rumour.created_at %></p>
+      <p class="card-text">คะแนนความน่าเชื่อถือ: <%= rumour.credibility_score %></p>
+      <p class="card-text">
+        สถานะ:
+        <span class="badge <%= rumour.status === 'panic' ? 'bg-danger' : 'bg-secondary' %>">
+          <%= rumour.status %>
+        </span>
+      </p>
+      <p class="card-text">จำนวนรายงาน: <%= rumour.report_count || 0 %></p>
+      <p class="card-text">
+        ผลการตรวจสอบ:
+        <% if (rumour.verified_status === 'true') { %>
+          <span class="badge bg-success">จริง</span>
+        <% } else if (rumour.verified_status === 'false') { %>
+          <span class="badge bg-danger">เท็จ</span>
+        <% } else { %>
+          <span class="badge bg-light text-dark">ยังไม่ตรวจสอบ</span>
+        <% } %>
+      </p>
+      <form method="post" action="/reviewer/rumours/<%= rumour.id %>/verify" class="d-flex gap-2">
+        <button class="btn btn-outline-success" name="status" value="true" type="submit">
+          ยืนยันจริง
+        </button>
+        <button class="btn btn-outline-danger" name="status" value="false" type="submit">
+          ยืนยันเท็จ
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">รายการรายงานทั้งหมด</h5>
+      <ul class="list-group list-group-flush">
+        <% const reportLabels = { distortion: 'บิดเบือน', incitement: 'ปลุกปั่น', false_info: 'ข้อมูลเท็จ' }; %>
+        <% const roleLabels = { user: 'ผู้ใช้ทั่วไป', reviewer: 'ผู้ตรวจสอบ' }; %>
+        <% if (reports.length === 0) { %>
+          <li class="list-group-item">ยังไม่มีรายงาน</li>
+        <% } %>
+        <% reports.forEach(rep => { %>
+          <li class="list-group-item">
+            <div class="report-row">
+              <div class="report-left">
+                <strong class="report-name"><%= rep.reporter_name %></strong>
+                <span class="role-badge role-<%= rep.reporter_role %>">
+                  <%= roleLabels[rep.reporter_role] || rep.reporter_role || '' %>
+                </span>
+              </div>
+              <span class="report-badge report-<%= rep.report_type %>">
+                <%= reportLabels[rep.report_type] || rep.report_type %>
+              </span>
+              <small class="text-muted report-time"><%= rep.reported_at %></small>
+            </div>
+          </li>
+        <% }) %>
+      </ul>
+    </div>
+  </div>
+</main>
+
+<%- include("../partials/foot") %>

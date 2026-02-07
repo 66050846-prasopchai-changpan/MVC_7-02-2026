@@ -2,16 +2,33 @@
 
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container">
-    <a class="navbar-brand" href="/">MVC Starter</a>
+    <a class="navbar-brand brand-accent" href="/">KMITL NEW</a>
+    <div class="navbar-nav">
+      <a class="nav-link" href="/user/rumours">ผู้ใช้ทั่วไป</a>
+      <a class="nav-link" href="/reviewer">ผู้ตรวจสอบ</a>
+      <a class="nav-link" href="/summary">สรุปผล</a>
+    </div>
+    <div class="navbar-nav ms-auto">
+      <% if (currentUser) { %>
+        <span class="navbar-text me-3">
+          <%= currentUser.name %> (<%= currentUser.role === 'reviewer' ? 'ผู้ตรวจสอบ' : 'ผู้ใช้ทั่วไป' %>)
+        </span>
+        <form method="post" action="/logout" class="d-inline">
+          <button class="btn btn-sm btn-outline-secondary" type="submit">ออกจากระบบ</button>
+        </form>
+      <% } else { %>
+        <a class="nav-link" href="/login">เข้าสู่ระบบ</a>
+      <% } %>
+    </div>
   </div>
 </nav>
 
 <main class="container py-4">
   <div class="p-4 p-md-5 mb-4 rounded text-bg-dark">
-    <div class="col-lg-6 px-0">
-      <h1 class="display-5">MVC + TypeScript</h1>
+    <div class="col-lg-7 px-0">
+      <h1 class="display-5">Rumor Tracking System</h1>
       <p class="lead my-3">
-        โครงเริ่มต้นสำหรับงานสอบ MVC: Express + EJS + Bootstrap
+        ระบบติดตามข่าวลือบนสื่อสังคมออนไลน์
       </p>
       <p class="lead mb-0">เวลาเซิร์ฟเวอร์: <%= now %></p>
     </div>
@@ -21,24 +38,27 @@
     <div class="col-md-4">
       <div class="card h-100">
         <div class="card-body">
-          <h5 class="card-title">Controllers</h5>
-          <p class="card-text">แยก logic ออกจาก view อย่างชัดเจน</p>
+          <h5 class="card-title">ผู้ใช้ทั่วไป</h5>
+          <p class="card-text">รายงานข่าวลือและดูรายละเอียด</p>
+          <a class="btn btn-outline-primary" href="/user/rumours">ไปที่หน้า</a>
         </div>
       </div>
     </div>
     <div class="col-md-4">
       <div class="card h-100">
         <div class="card-body">
-          <h5 class="card-title">Views (EJS)</h5>
-          <p class="card-text">ใช้ HTML ตรง ๆ พร้อมแทรกข้อมูลได้</p>
+          <h5 class="card-title">ผู้ตรวจสอบ</h5>
+          <p class="card-text">ยืนยันข่าวลือว่าเป็นจริงหรือเท็จ</p>
+          <a class="btn btn-outline-primary" href="/reviewer">ไปที่หน้า</a>
         </div>
       </div>
     </div>
     <div class="col-md-4">
       <div class="card h-100">
         <div class="card-body">
-          <h5 class="card-title">Models</h5>
-          <p class="card-text">พร้อมต่อ DB จริงเมื่อเริ่มทำ</p>
+          <h5 class="card-title">หน้าสรุปผล</h5>
+          <p class="card-text">ดูข่าวลือ panic และผลตรวจสอบจริง/เท็จ</p>
+          <a class="btn btn-outline-primary" href="/summary">ไปที่หน้า</a>
         </div>
       </div>
     </div>

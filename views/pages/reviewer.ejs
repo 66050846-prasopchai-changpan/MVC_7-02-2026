@@ -1,0 +1,93 @@
+<%- include("../partials/head") %>
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container">
+    <a class="navbar-brand brand-accent" href="/">KMITL NEW</a>
+    <div class="navbar-nav">
+      <a class="nav-link" href="/user/rumours">ผู้ใช้ทั่วไป</a>
+      <a class="nav-link active" href="/reviewer">ผู้ตรวจสอบ</a>
+      <a class="nav-link" href="/summary">สรุปผล</a>
+    </div>
+    <div class="navbar-nav ms-auto">
+      <% if (currentUser) { %>
+        <span class="navbar-text me-3">
+          <%= currentUser.name %> (<%= currentUser.role === 'reviewer' ? 'ผู้ตรวจสอบ' : 'ผู้ใช้ทั่วไป' %>)
+        </span>
+        <form method="post" action="/logout" class="d-inline">
+          <button class="btn btn-sm btn-outline-secondary" type="submit">ออกจากระบบ</button>
+        </form>
+      <% } else { %>
+        <a class="nav-link" href="/login">เข้าสู่ระบบ</a>
+      <% } %>
+    </div>
+  </div>
+</nav>
+
+<main class="container py-4">
+  <h1 class="mb-4">หน้าผู้ตรวจสอบ</h1>
+
+  <div class="table-responsive mb-4">
+    <table class="table table-striped align-middle">
+      <thead>
+        <tr>
+          <th>รหัสข่าวลือ</th>
+          <th>หัวข้อ</th>
+          <th>จำนวนรายงาน</th>
+          <th>สถานะ</th>
+          <th>ผลตรวจสอบ</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% rumours.forEach(r => { %>
+          <tr>
+            <td><%= r.id %></td>
+            <td><%= r.title %></td>
+            <td><%= r.report_count || 0 %></td>
+            <td>
+              <span class="badge <%= r.status === 'panic' ? 'bg-danger' : 'bg-secondary' %>">
+                <%= r.status %>
+              </span>
+            </td>
+            <td>
+              <% if (r.verified_status === 'true') { %>
+                <span class="badge bg-success">จริง</span>
+              <% } else if (r.verified_status === 'false') { %>
+                <span class="badge bg-danger">เท็จ</span>
+              <% } else { %>
+                <span class="badge bg-light text-dark">ยังไม่ตรวจสอบ</span>
+              <% } %>
+            </td>
+            <td>
+              <a class="btn btn-sm btn-outline-primary" href="/reviewer/rumours/<%= r.id %>">
+                ตรวจสอบ
+              </a>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">ข่าวที่ถูกยืนยันแล้ว</h5>
+      <ul class="list-group list-group-flush">
+        <% if (verifiedRumours.length === 0) { %>
+          <li class="list-group-item">ยังไม่มีข่าวที่ถูกยืนยัน</li>
+        <% } %>
+        <% verifiedRumours.forEach(r => { %>
+          <li class="list-group-item">
+            <strong><%= r.title %></strong>
+            <span class="badge <%= r.verified_status === 'true' ? 'bg-success' : 'bg-danger' %>">
+              <%= r.verified_status === 'true' ? 'จริง' : 'เท็จ' %>
+            </span>
+            <div class="text-muted small">รหัส: <%= r.id %> | รายงาน: <%= r.report_count || 0 %></div>
+          </li>
+        <% }) %>
+      </ul>
+    </div>
+  </div>
+</main>
+
+<%- include("../partials/foot") %>

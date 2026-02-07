@@ -8,11 +8,13 @@ export type UserRow = {
   password: string;
 };
 
+// ดึงผู้ใช้ทั้งหมด (ใช้แสดงในหน้า login)
 export const getAllUsers = async (): Promise<UserRow[]> => {
   const db = await dbPromise;
   return (await db.all(`SELECT * FROM users ORDER BY id`)) as UserRow[];
 };
 
+// ตรวจสอบ username/password
 export const getUserByCredentials = async (
   username: string,
   password: string

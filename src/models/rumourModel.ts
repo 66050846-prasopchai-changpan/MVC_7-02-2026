@@ -11,6 +11,7 @@ export type RumourRow = {
   report_count?: number;
 };
 
+// ดึงข่าวทั้งหมดพร้อมนับจำนวนรายงาน
 export const getAllRumours = async (): Promise<RumourRow[]> => {
   const db = await dbPromise;
   const sql = `
@@ -23,6 +24,7 @@ export const getAllRumours = async (): Promise<RumourRow[]> => {
   return (await db.all(sql)) as RumourRow[];
 };
 
+// ดึงข่าวลือรายตัว (ใช้ในหน้า detail)
 export const getRumourById = async (
   id: number
 ): Promise<RumourRow | undefined> => {
@@ -37,6 +39,7 @@ export const getRumourById = async (
   return (await db.get(sql, id)) as RumourRow | undefined;
 };
 
+// ดึงเฉพาะข่าวที่เป็น panic
 export const getPanicRumours = async (): Promise<RumourRow[]> => {
   const db = await dbPromise;
   const sql = `
@@ -50,6 +53,7 @@ export const getPanicRumours = async (): Promise<RumourRow[]> => {
   return (await db.all(sql)) as RumourRow[];
 };
 
+// ดึงข่าวที่มีผลตรวจสอบแล้ว (จริง/เท็จ)
 export const getVerifiedRumours = () => {
   const sql = `
     SELECT r.*, COUNT(rep.id) AS report_count
@@ -62,6 +66,7 @@ export const getVerifiedRumours = () => {
   return dbPromise.then((db) => db.all(sql) as Promise<RumourRow[]>);
 };
 
+// เปลี่ยนสถานะข่าวเป็น normal/panic
 export const setRumourStatus = async (
   id: number,
   status: "normal" | "panic"
@@ -70,6 +75,7 @@ export const setRumourStatus = async (
   await db.run(`UPDATE rumour SET status = ? WHERE id = ?`, status, id);
 };
 
+// ผู้ตรวจสอบยืนยันว่าเป็นจริง/เท็จ
 export const setVerifiedStatus = async (
   id: number,
   verifiedStatus: "true" | "false"

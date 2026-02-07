@@ -7,6 +7,7 @@ import {
 } from "../models/rumourModel";
 import { addReport, getReportsByRumourId } from "../models/reportModel";
 
+// หน้าแสดงข่าวทั้งหมด (ผู้ใช้ทั่วไป)
 export const listRumours = async (req: Request, res: Response) => {
   const rumours = await getAllRumours();
   res.render("pages/rumours-list", {
@@ -15,6 +16,7 @@ export const listRumours = async (req: Request, res: Response) => {
   });
 };
 
+// หน้าแสดงรายละเอียดข่าว + รายงาน
 export const rumourDetail = async (req: Request, res: Response) => {
   const rumourId = Number(req.params.id);
   const rumour = await getRumourById(rumourId);
@@ -34,6 +36,7 @@ export const rumourDetail = async (req: Request, res: Response) => {
   });
 };
 
+// หน้าแสดงสรุปผล (panic + จริง/เท็จ)
 export const summaryPage = async (req: Request, res: Response) => {
   const panicRumours = await getPanicRumours();
   const verifiedRumours = await getVerifiedRumours();
@@ -45,6 +48,7 @@ export const summaryPage = async (req: Request, res: Response) => {
   });
 };
 
+// บันทึกรายงานข่าวของผู้ใช้
 export const createReport = async (req: Request, res: Response) => {
   const rumourId = Number(req.params.id);
   const reportType = req.body.reportType as

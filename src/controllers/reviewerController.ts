@@ -7,6 +7,7 @@ import {
 } from "../models/rumourModel";
 import { getReportsByRumourId } from "../models/reportModel";
 
+// หน้า dashboard ผู้ตรวจสอบ
 export const reviewerDashboard = async (req: Request, res: Response) => {
   const rumours = await getAllRumours();
   const verifiedRumours = await getVerifiedRumours();
@@ -18,6 +19,7 @@ export const reviewerDashboard = async (req: Request, res: Response) => {
   });
 };
 
+// ผู้ตรวจสอบยืนยันข่าวจริง/เท็จ
 export const verifyRumour = async (req: Request, res: Response) => {
   const rumourId = Number(req.params.id);
   const status = req.body.status as "true" | "false";
@@ -37,6 +39,7 @@ export const verifyRumour = async (req: Request, res: Response) => {
   res.redirect(`/reviewer/rumours/${rumourId}`);
 };
 
+// หน้า detail ของผู้ตรวจสอบ (ดูรายงานและยืนยันผล)
 export const reviewerDetail = async (req: Request, res: Response) => {
   const rumourId = Number(req.params.id);
   const rumour = await getRumourById(rumourId);

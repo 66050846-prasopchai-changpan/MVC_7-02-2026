@@ -1,12 +1,14 @@
 import { Request, Response } from "express";
 import { getAllUsers, getUserByCredentials } from "../models/userModel";
 
+// หน้า login
 export const loginPage = async (req: Request, res: Response) => {
   const users = await getAllUsers();
   const error = typeof req.query.error === "string" ? req.query.error : null;
   res.render("pages/login", { title: "เข้าสู่ระบบ", users, error });
 };
 
+// ตรวจสอบผู้ใช้แล้วเก็บใน session
 export const login = async (req: Request, res: Response) => {
   const username = String(req.body.username || "").trim();
   const password = String(req.body.password || "").trim();
@@ -19,6 +21,7 @@ export const login = async (req: Request, res: Response) => {
 
   req.session.user = { id: user.id, name: user.name, role: user.role };
 
+  // แยกไปหน้าตามบทบาท
   if (user.role === "reviewer") {
     res.redirect("/reviewer");
   } else {
@@ -26,6 +29,7 @@ export const login = async (req: Request, res: Response) => {
   }
 };
 
+// ล็อกเอาท์
 export const logout = (req: Request, res: Response) => {
   req.session.destroy(() => {
     res.redirect("/login");

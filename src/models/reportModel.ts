@@ -11,6 +11,7 @@ export type ReportRow = {
   reporter_role?: "user" | "reviewer";
 };
 
+// ดึงรายงานทั้งหมดของข่าวลือหนึ่งข่าว
 export const getReportsByRumourId = async (
   rumourId: number
 ): Promise<ReportRow[]> => {
@@ -25,6 +26,7 @@ export const getReportsByRumourId = async (
   return (await db.all(sql, rumourId)) as ReportRow[];
 };
 
+// เพิ่มรายงานใหม่และเช็ค business rules
 export const addReport = (params: {
   reporterId: number;
   rumourId: number;
@@ -37,10 +39,12 @@ export const addReport = (params: {
       throw new Error("ไม่พบข่าวลือที่ต้องการรายงาน");
     }
 
+    // ข่าวที่ถูกตรวจสอบแล้ว ห้ามรายงานเพิ่ม
     if (rumour.verified_status !== "unverified") {
       throw new Error("ข่าวลือนี้ถูกตรวจสอบแล้ว จึงไม่สามารถรายงานเพิ่มได้");
     }
 
+    // คนเดิมรายงานข่าวเดิมซ้ำไม่ได้
     const exists = await db.get(
       `SELECT 1 FROM report WHERE reporter_id = ? AND rumour_id = ? LIMIT 1`,
       params.reporterId,
@@ -50,6 +54,7 @@ export const addReport = (params: {
       throw new Error("ผู้ใช้รายนี้ได้รายงานข่าวลือนี้ไปแล้ว");
     }
 
+    // บันทึกรายงาน
     await db.run(
       `INSERT INTO report (reporter_id, rumour_id, reported_at, report_type)
        VALUES (?, ?, datetime('now', 'localtime'), ?)`,
@@ -58,6 +63,7 @@ export const addReport = (params: {
       params.reportType
     );
 
+    // ถ้ารายงานถึงเกณฑ์ ให้เปลี่ยนเป็น panic
     const row = (await db.get(
       `SELECT COUNT(*) AS count FROM report WHERE rumour_id = ?`,
       params.rumourId

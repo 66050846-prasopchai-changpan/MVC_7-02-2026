@@ -1,5 +1,6 @@
 PRAGMA foreign_keys = ON;
 
+-- ตารางผู้ใช้งาน (ผู้ใช้ทั่วไป/ผู้ตรวจสอบ)
 DROP TABLE IF EXISTS report;
 DROP TABLE IF EXISTS rumour;
 DROP TABLE IF EXISTS users;
@@ -12,6 +13,7 @@ CREATE TABLE users (
   password TEXT NOT NULL
 );
 
+-- ตารางข่าวลือ
 CREATE TABLE rumour (
   id INTEGER PRIMARY KEY,
   title TEXT NOT NULL,
@@ -22,6 +24,7 @@ CREATE TABLE rumour (
   verified_status TEXT NOT NULL DEFAULT 'unverified' CHECK (verified_status IN ('unverified', 'true', 'false'))
 );
 
+-- ตารางรายงานข่าว (คนเดิมรายงานซ้ำไม่ได้)
 CREATE TABLE report (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   reporter_id INTEGER NOT NULL,

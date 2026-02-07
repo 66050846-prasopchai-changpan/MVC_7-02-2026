@@ -1,5 +1,6 @@
 PRAGMA foreign_keys = ON;
 
+-- ผู้ใช้งานตัวอย่าง (ใช้สำหรับ login)
 INSERT INTO users (name, role, username, password) VALUES
   ('อลิซ', 'user', 'alice', '1234'),
   ('บ๊อบ', 'user', 'bob', '1234'),
@@ -12,6 +13,7 @@ INSERT INTO users (name, role, username, password) VALUES
   ('อิงค์', 'user', 'ink', '1234'),
   ('เจน', 'reviewer', 'jane', '1234');
 
+-- ข่าวลือตัวอย่าง (อย่างน้อย 8 ข่าว)
 INSERT INTO rumour (id, title, source, created_at, credibility_score, status, verified_status) VALUES
   (12345678, 'ข่าวน้ำท่วมในเขต A', 'โซเชียล', '2026-02-01', 40, 'normal', 'unverified'),
   (23456789, 'ไฟไหม้ตลาดกลางคืน', 'ไลน์กลุ่ม', '2026-02-02', 25, 'panic', 'unverified'),
@@ -22,6 +24,7 @@ INSERT INTO rumour (id, title, source, created_at, credibility_score, status, ve
   (78912345, 'สารเคมีรั่วไหล', 'ข่าวทีวี', '2026-02-05', 75, 'normal', 'unverified'),
   (89123456, 'ระบบรถไฟขัดข้อง', 'ทวิตเตอร์', '2026-02-05', 50, 'normal', 'unverified');
 
+-- รายงานตัวอย่าง
 INSERT INTO report (reporter_id, rumour_id, reported_at, report_type) VALUES
   (1, 23456789, '2026-02-02 09:30', 'incitement'),
   (2, 23456789, '2026-02-02 10:00', 'false_info'),

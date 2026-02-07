@@ -1,0 +1,48 @@
+<%- include("../partials/head") %>
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container">
+    <a class="navbar-brand" href="/">MVC Starter</a>
+  </div>
+</nav>
+
+<main class="container py-4">
+  <div class="p-4 p-md-5 mb-4 rounded text-bg-dark">
+    <div class="col-lg-6 px-0">
+      <h1 class="display-5">MVC + TypeScript</h1>
+      <p class="lead my-3">
+        โครงเริ่มต้นสำหรับงานสอบ MVC: Express + EJS + Bootstrap
+      </p>
+      <p class="lead mb-0">เวลาเซิร์ฟเวอร์: <%= now %></p>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">Controllers</h5>
+          <p class="card-text">แยก logic ออกจาก view อย่างชัดเจน</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">Views (EJS)</h5>
+          <p class="card-text">ใช้ HTML ตรง ๆ พร้อมแทรกข้อมูลได้</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">Models</h5>
+          <p class="card-text">พร้อมต่อ DB จริงเมื่อเริ่มทำ</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<%- include("../partials/foot") %>
